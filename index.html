@@ -8,59 +8,30 @@
     body {
       margin: 0;
       background: black;
-      overflow: hidden;
       font-family: monospace;
       color: #00ffcc;
-    }
-
-    /* Loader container */
-    #loader {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* Neon text */
-    .text {
-      font-size: 22px;
-      margin-bottom: 20px;
-      animation: glow 1.5s infinite alternate;
-    }
-
-    @keyframes glow {
-      0% { color: #00ffcc; text-shadow: 0 0 5px #00ffcc; }
-      50% { color: #00ff00; text-shadow: 0 0 10px #00ff00; }
-      100% { color: #ff9900; text-shadow: 0 0 15px #ff9900; }
-    }
-
-    /* Neon progress bar */
-    .bar {
-      width: 250px;
-      height: 6px;
-      background: #111;
-      border-radius: 10px;
       overflow: hidden;
-      box-shadow: 0 0 10px #00ffcc;
     }
 
-    .fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #00ffcc, #00ff00, #ff9900);
-      animation: load 2.5s linear forwards;
-      box-shadow: 0 0 15px #00ffcc;
+    #loader {
+      padding: 20px;
+      white-space: pre-line;
+      font-size: 14px;
     }
 
-    @keyframes load {
-      from { width: 0%; }
-      to { width: 100%; }
+    .line {
+      opacity: 0;
+      animation: fadeIn 0.5s forwards;
     }
 
-    /* iframe */
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    .green { color: #00ff00; text-shadow: 0 0 5px #00ff00; }
+    .blue { color: #00ccff; text-shadow: 0 0 5px #00ccff; }
+    .orange { color: #ff9900; text-shadow: 0 0 5px #ff9900; }
+
     iframe {
       width: 100%;
       height: 100vh;
@@ -72,20 +43,55 @@
 
 <body>
 
-<div id="loader">
-  <div class="text">Initializing PiUnlocker...</div>
-  <div class="bar">
-    <div class="fill"></div>
-  </div>
-</div>
+<div id="loader"></div>
 
-<iframe id="siteFrame" src="https://about.piunlocker.com"></iframe>
+<iframe id="siteFrame" src="https://about.piunlocker.com/"></iframe>
 
 <script>
+  const lines = [
+    { text: "[BOOT] Initializing PiUnlocker Core...", class: "blue" },
+    { text: "[OK] Loading modules...", class: "green" },
+    { text: "[OK] Connecting secure server...", class: "green" },
+    { text: "[SCAN] Detecting environment...", class: "orange" },
+    { text: "[OK] Bypassing restrictions...", class: "green" },
+    { text: "[OK] Injecting modules...", class: "green" },
+    { text: "[WAIT] Establishing connection...", class: "orange" },
+    { text: "[SUCCESS] System Ready ✔", class: "blue" }
+  ];
+
+  const loader = document.getElementById("loader");
+
+  let i = 0;
+
+  function typeLine() {
+    if (i < lines.length) {
+      const div = document.createElement("div");
+      div.className = "line " + lines[i].class;
+      loader.appendChild(div);
+
+      let text = lines[i].text;
+      let j = 0;
+
+      function typeChar() {
+        if (j < text.length) {
+          div.innerHTML += text.charAt(j);
+          j++;
+          setTimeout(typeChar, 20);
+        }
+      }
+
+      typeChar();
+      i++;
+      setTimeout(typeLine, 600);
+    }
+  }
+
+  typeLine();
+
   setTimeout(() => {
     document.getElementById("loader").style.display = "none";
     document.getElementById("siteFrame").style.display = "block";
-  }, 2600);
+  }, 5000);
 </script>
 
 </body>
