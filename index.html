@@ -7,30 +7,58 @@
   <style>
     body {
       margin: 0;
-      background: black;
+      background: #050816;
       font-family: monospace;
-      color: #00ffcc;
+      color: #00ccff;
       overflow: hidden;
     }
 
+    /* Loader container */
     #loader {
-      padding: 20px;
-      white-space: pre-line;
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Neon pulse circle */
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 4px solid #1b2a4a;
+      border-top: 4px solid #ff9900;
+      border-right: 4px solid #ff9900;
+      animation: spin 1s linear infinite, glow 1.5s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes glow {
+      0% { box-shadow: 0 0 5px #ff9900; }
+      50% { box-shadow: 0 0 20px #ff9900; }
+      100% { box-shadow: 0 0 5px #ff9900; }
+    }
+
+    /* Text */
+    .text {
+      margin-top: 20px;
       font-size: 14px;
+      color: #00ccff;
+      text-shadow: 0 0 6px #00ccff;
+      animation: fade 1s infinite alternate;
     }
 
-    .line {
-      opacity: 0;
-      animation: fadeIn 0.5s forwards;
-    }
-
-    @keyframes fadeIn {
+    @keyframes fade {
+      from { opacity: 0.4; }
       to { opacity: 1; }
     }
-
-    .green { color: #00ff00; text-shadow: 0 0 5px #00ff00; }
-    .blue { color: #00ccff; text-shadow: 0 0 5px #00ccff; }
-    .orange { color: #ff9900; text-shadow: 0 0 5px #ff9900; }
 
     iframe {
       width: 100%;
@@ -43,55 +71,18 @@
 
 <body>
 
-<div id="loader"></div>
+<div id="loader">
+  <div class="spinner"></div>
+  <div class="text">Initializing PiUnlocker...</div>
+</div>
 
 <iframe id="siteFrame" src="https://about.piunlocker.com/"></iframe>
 
 <script>
-  const lines = [
-    { text: "[BOOT] Initializing PiUnlocker Core...", class: "blue" },
-    { text: "[OK] Loading modules...", class: "green" },
-    { text: "[OK] Connecting secure server...", class: "green" },
-    { text: "[SCAN] Detecting environment...", class: "orange" },
-    { text: "[OK] Bypassing restrictions...", class: "green" },
-    { text: "[OK] Injecting modules...", class: "green" },
-    { text: "[WAIT] Establishing connection...", class: "orange" },
-    { text: "[SUCCESS] System Ready ✔", class: "blue" }
-  ];
-
-  const loader = document.getElementById("loader");
-
-  let i = 0;
-
-  function typeLine() {
-    if (i < lines.length) {
-      const div = document.createElement("div");
-      div.className = "line " + lines[i].class;
-      loader.appendChild(div);
-
-      let text = lines[i].text;
-      let j = 0;
-
-      function typeChar() {
-        if (j < text.length) {
-          div.innerHTML += text.charAt(j);
-          j++;
-          setTimeout(typeChar, 20);
-        }
-      }
-
-      typeChar();
-      i++;
-      setTimeout(typeLine, 600);
-    }
-  }
-
-  typeLine();
-
   setTimeout(() => {
     document.getElementById("loader").style.display = "none";
     document.getElementById("siteFrame").style.display = "block";
-  }, 5000);
+  }, 3000);
 </script>
 
 </body>
